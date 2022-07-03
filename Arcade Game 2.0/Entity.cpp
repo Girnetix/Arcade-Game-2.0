@@ -25,12 +25,7 @@ Entity::Entity(int x, int y, short color, Direction eDirection, double speed) :E
 
 void Entity::DestroyEntity(Entity* entity)
 {
-	/*for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
-		if (*it == entity)
-		{
-			entities.erase(it);
-			break;
-		}*/
+
 }
 
 int Entity::GetX()
@@ -59,21 +54,10 @@ void Entity::UpdateEntity(double deltaTime)
 	if (time >= delay)
 	{
 		time -= delay;
-
-		
 		pWindow->ClearSymbol(x, y, symbol);
-
 		Update();
 		if (IsAlive())
-		{
-
 			pWindow->PrintSymbol(x, y, symbol, color);
-		}
-		else
-		{
-			if (eEntityType != EntityType::Player)
-				DestroyEntity(this);
-		}
 	}
 }
 

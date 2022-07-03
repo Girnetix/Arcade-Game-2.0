@@ -11,7 +11,6 @@ public:
 	Entity* GetOwner();
 
 	void Update() override;
-	void Shoot() override;
 	void Kill(Entity* target) override;
 private:
 	Entity* owner;

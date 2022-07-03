@@ -14,7 +14,6 @@ public:
 	Entity();
 	Entity(int x, int y, short color, Direction eDirection, double speed);
 
-
 	void DestroyEntity(Entity* entity);
 
 	int GetX();
@@ -30,6 +29,7 @@ public:
 	EntityType GetEntityType();
 	Direction GetDiretion();
 public:
+	virtual void OnCollisionEntity(Entity* target) = 0;
 	virtual void Update() = 0;
 	virtual void Shoot() = 0;
 	virtual void Kill(Entity*) = 0;

@@ -10,7 +10,7 @@ Player::Player(int x, int y, short color, Direction eDirection, double speed, co
 	eEntityType = EntityType::Player;
 	this->name = name;
 	id = idCounter++;					//задаём нашему игроку уникальный номер
-	entitiesBuffer->SetEntity(x, y, this);
+	//entitiesBuffer->SetEntity(x, y, this);
 }
 
 void Player::Update()
@@ -31,7 +31,7 @@ void Player::Shoot()
 	if (countOfBullets)
 	{
 		countOfBullets--;
-		entities.push_back(new Bullet(x, y, FG_BLUE | BG_BLACK, eDirection, this, 50.0));
+		//entities.push_back(new Bullet(x, y, FG_BLUE | BG_BLACK, eDirection, this, 50.0));
 	}
 }
 

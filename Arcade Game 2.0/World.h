@@ -15,14 +15,15 @@ private:
 	};
 private:
 	Entity* GetEntity(int x, int y);
-	void SetEntity(int x, int y, Entity* entity);
-	void DeleteEntity(int x, int y);
-	void CheckColission(Entity* currentEntity, Entity* targetEntity);
 public:
 	World();
 	~World();
 	void CreateEntity(Entity* entity);
 	void UpdateWorld(double deltaTime);
+
+	void DestroyEntity(Entity* entity);
+	void SetEntityToBuf(int x, int y, Entity* entity);
+	void DeleteEntityFromBuf(int x, int y);
 private:
 	std::vector<Entity*> entities;
 	EntityBuffer* entityBuffer = nullptr;

@@ -6,7 +6,7 @@ Randomer::Randomer(int x, int y, short color, double speed) : Entity(x, y, color
 	pNumGenerator->SetRange((uint32_t)Direction::Up, (uint32_t)Direction::Right);
 	symbol = '%';
 	eDirection = (Direction)pNumGenerator->Randomize();
-	entitiesBuffer->SetEntity(x, y, this);
+	//entitiesBuffer->SetEntity(x, y, this);
 }
 
 void Randomer::Update()

@@ -5,173 +5,33 @@ Entity* World::GetEntity(int x, int y)
 	return entityBuffer[y * pWindow->GetScrWidth() + x].entity;
 }
 
-void World::SetEntity(int x, int y, Entity* entity)
+void World::SetEntityToBuf(int x, int y, Entity* entity)
 {
 	Entity* target = GetEntity(x, y);
 	if (target != nullptr)
-		CheckColission(entity, target);
+		entity->OnCollisionEntity(target);
 	else
 		entityBuffer[y * pWindow->GetScrWidth() + x].entity = entity;
 }
 
-void World::DeleteEntity(int x, int y)
+void World::DeleteEntityFromBuf(int x, int y)
 {
-
+	entityBuffer[y * pWindow->GetScrWidth() + x].entity = nullptr;
 }
 
-void World::CheckColission(Entity* current, Entity* target)
+void World::DestroyEntity(Entity* entity)
 {
-	auto currentEntity = current->GetEntityType();
-	auto targetEntity = target->GetEntityType();
-	switch (current->GetEntityType())
+	int x = entity->GetX(), y = entity->GetY();
+	Entity* target = GetEntity(x, y);
+	if (target != nullptr)
 	{
-	case Entity::EntityType::Player:
-		switch (targetEntity)
-		{
-		case Entity::EntityType::Player:
-			break;
-		case Entity::EntityType::Bullet:
-			break;
-		case Entity::EntityType::Cannon:
-			break;
-		case Entity::EntityType::Runner:
-			break;
-		case Entity::EntityType::Randomer:
-			break;
-		case Entity::EntityType::Chaser:
-			break;
-		case Entity::EntityType::MovableEntity:
-			break;
-		case Entity::EntityType::CheckPoint:
-			break;
-		case Entity::EntityType::Health:
-			break;
-		case Entity::EntityType::Ammo:
-			break;
-		case Entity::EntityType::Life:
-			break;
-		default:
-			break;
-		}
-		break;
-	case Entity::EntityType::Bullet:
-		switch (targetEntity)
-		{
-		case Entity::EntityType::Player:
-			break;
-		case Entity::EntityType::Bullet:
-			break;
-		case Entity::EntityType::Cannon:
-			break;
-		case Entity::EntityType::Runner:
-			break;
-		case Entity::EntityType::Randomer:
-			break;
-		case Entity::EntityType::Chaser:
-			break;
-		case Entity::EntityType::MovableEntity:
-			break;
-		case Entity::EntityType::CheckPoint:
-			break;
-		case Entity::EntityType::Health:
-			break;
-		case Entity::EntityType::Ammo:
-			break;
-		case Entity::EntityType::Life:
-			break;
-		default:
-			break;
-		}
-		break;
-	case Entity::EntityType::Runner:
-		switch (targetEntity)
-		{
-		case Entity::EntityType::Player:
-			break;
-		case Entity::EntityType::Bullet:
-			break;
-		case Entity::EntityType::Cannon:
-			break;
-		case Entity::EntityType::Runner:
-			break;
-		case Entity::EntityType::Randomer:
-			break;
-		case Entity::EntityType::Chaser:
-			break;
-		case Entity::EntityType::MovableEntity:
-			break;
-		case Entity::EntityType::CheckPoint:
-			break;
-		case Entity::EntityType::Health:
-			break;
-		case Entity::EntityType::Ammo:
-			break;
-		case Entity::EntityType::Life:
-			break;
-		default:
-			break;
-		}
-		break;
-	case Entity::EntityType::Randomer:
-		switch (targetEntity)
-		{
-		case Entity::EntityType::Player:
-			break;
-		case Entity::EntityType::Bullet:
-			break;
-		case Entity::EntityType::Cannon:
-			break;
-		case Entity::EntityType::Runner:
-			break;
-		case Entity::EntityType::Randomer:
-			break;
-		case Entity::EntityType::Chaser:
-			break;
-		case Entity::EntityType::MovableEntity:
-			break;
-		case Entity::EntityType::CheckPoint:
-			break;
-		case Entity::EntityType::Health:
-			break;
-		case Entity::EntityType::Ammo:
-			break;
-		case Entity::EntityType::Life:
-			break;
-		default:
-			break;
-		}
-		break;
-	case Entity::EntityType::Chaser:
-		switch (targetEntity)
-		{
-		case Entity::EntityType::Player:
-			break;
-		case Entity::EntityType::Bullet:
-			break;
-		case Entity::EntityType::Cannon:
-			break;
-		case Entity::EntityType::Runner:
-			break;
-		case Entity::EntityType::Randomer:
-			break;
-		case Entity::EntityType::Chaser:
-			break;
-		case Entity::EntityType::MovableEntity:
-			break;
-		case Entity::EntityType::CheckPoint:
-			break;
-		case Entity::EntityType::Health:
-			break;
-		case Entity::EntityType::Ammo:
-			break;
-		case Entity::EntityType::Life:
-			break;
-		default:
-			break;
-		}
-		break;
-	default:
-		break;
+		DeleteEntityFromBuf(x, y);
+		for (auto iter = entities.begin(); iter != entities.end(); iter++)
+			if (*iter == target)
+			{
+				entities.erase(iter);
+				break;
+			}
 	}
 }
 
@@ -189,10 +49,23 @@ World::~World()
 void World::CreateEntity(Entity* entity)
 {
 	entities.push_back(entity);
-	SetEntity(entity->GetX(), entity->GetY(), entity);
+	SetEntityToBuf(entity->GetX(), entity->GetY(), entity);
 }
 
 void World::UpdateWorld(double deltaTime)
 {
-
+	for (auto iter = entities.begin(); iter != entities.end();)
+	{
+		Entity* currentEntity = *iter;
+		DeleteEntityFromBuf(currentEntity->GetX(), currentEntity->GetY());
+		currentEntity->UpdateEntity(deltaTime);
+		if (currentEntity->IsAlive())
+		{
+			SetEntityToBuf(currentEntity->GetX(), currentEntity->GetY(), currentEntity);
+			iter++;
+		}
+		else
+			if (currentEntity->GetEntityType() != Entity::EntityType::Player)
+				iter = entities.erase(iter);
+	}
 }

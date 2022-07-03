@@ -23,6 +23,7 @@ private:
 	};
 private:
 	GameState gameState = GameState::Menu;			//состояние игры
+	World* world = nullptr;
 	bool gameIsRunning = true;		//переменная, которая показывает запущена игра или нет
 	double gameTime = 0.0, fpsTime = 1.0, minFPS = 0.0, maxFPS = 0.0, currentFPS = 0.0;
 };

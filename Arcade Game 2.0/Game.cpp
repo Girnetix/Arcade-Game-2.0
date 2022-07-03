@@ -9,10 +9,9 @@ bool CGame::OnUserCreate()
 
 bool CGame::OnUserUpdate(float fElapsedTime)
 {
-
 	switch (gameState)
 	{
-		case CGame::GameState::Menu: pMenu->DrawMenu(pWindow); break;
+		case CGame::GameState::Menu:	pMenu->DrawMenu(pWindow); break;
 		case CGame::GameState::Editor:	break;
 		case CGame::GameState::Hints:	break;
 		case CGame::GameState::Running: DoGameLoop(fElapsedTime); break;

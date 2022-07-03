@@ -9,7 +9,7 @@ Bullet::Bullet(int x, int y, short color, Direction eDirection, Entity* owner, d
 		case Direction::Left:  this->x--;		break;
 		case Direction::Right: this->x++;		break;
 	}
-	entitiesBuffer->SetEntity(x, y, this);
+
 	this->owner = owner;
 	symbol = 'O';
 	eEntityType = EntityType::Bullet;
@@ -17,7 +17,7 @@ Bullet::Bullet(int x, int y, short color, Direction eDirection, Entity* owner, d
 	wchar_t ch = pWindow->GetChar(this->x, this->y);
 
 	//узнаём какой символ находится в будущей позиции пули
-	if (ch == '\0' || ch == '#')//вышли за пределы экрана или попали в стенку
+	if (ch == '\0' || ch == '#')	//вышли за пределы экрана или попали в стенку
 		Alive(false);
 	else if (ch == ' ')			//пустота - можно спокойно перемещать пулю в эту позицию
 		pWindow->PrintSymbol(this->x, this->y, symbol, color);
@@ -58,10 +58,6 @@ void Bullet::Update()
 	}
 	else if (ch != ' ')				//есть какой-то символ
 		Kill(GetEntity(testX, y));			//убиваем сущность в этих координатах
-}
-
-void Bullet::Shoot()
-{
 }
 
 void Bullet::Kill(Entity* target)

@@ -6,7 +6,7 @@ Runner::Runner(int x, int y, short color, Direction eDirection, double speed) : 
 	eDirection = Direction::Left;
 	symbol = 'S';
 	pWindow->PrintSymbol(x, y, symbol, FG_GREEN | BG_BLACK);
-	entitiesBuffer->SetEntity(x, y, this);
+	//entitiesBuffer->SetEntity(x, y, this);
 }
 
 void Runner::Update()
