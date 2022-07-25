@@ -8,11 +8,10 @@ class Cannon : public Entity
 {
 public:
 	Cannon(int x, int y, short color, Direction eDirection, double speed);
+	void OnCollisionEntity(Entity* target) override;
 	void Update() override;
-	void Shoot() override;
-	void Kill(Entity*) override;
 private:
-
+	void Shoot();
 };
 
 #endif

@@ -2,6 +2,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "Entity.h"
 #include "World.h"
 
 class CGame: public CEngine
@@ -25,7 +26,8 @@ private:
 	GameState gameState = GameState::Menu;			//состояние игры
 	World* world = nullptr;
 	bool gameIsRunning = true;		//переменная, которая показывает запущена игра или нет
-	double gameTime = 0.0, fpsTime = 1.0, minFPS = 0.0, maxFPS = 0.0, currentFPS = 0.0;
+	double gameTime = 0.0, fpsTime = 1.0, minFPS = 0.0, maxFPS = 0.0;
+	int fpscount = 0;
 };
 
 #endif

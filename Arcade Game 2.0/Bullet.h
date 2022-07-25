@@ -10,8 +10,8 @@ public:
 	Bullet(int x, int y, short color, Direction eDirection, Entity* owner, double speed);
 	Entity* GetOwner();
 
+	void OnCollisionEntity(Entity* target) override;
 	void Update() override;
-	void Kill(Entity* target) override;
 private:
 	Entity* owner;
 };

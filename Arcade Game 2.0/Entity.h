@@ -5,6 +5,8 @@
 #include <Engine/Engine.h>
 #include <vector>
 
+class World;
+
 class Entity
 {
 public:
@@ -14,10 +16,15 @@ public:
 	Entity();
 	Entity(int x, int y, short color, Direction eDirection, double speed);
 
-	void DestroyEntity(Entity* entity);
+	void CreateEntity(Entity* entity);
+	void SetEntityToBuf(Entity* entity);
+	void DeleteEntityFromBuf(Entity* entity);
 
 	int GetX();
 	int GetY();
+
+	short GetEntityColor();
+	wchar_t GetEntitySymbol();
 
 	void Alive(bool isAlive);
 	bool IsAlive();
@@ -28,17 +35,20 @@ public:
 
 	EntityType GetEntityType();
 	Direction GetDiretion();
+
+	void SetWorld(World* world);
+	World* GetWorld();
 public:
 	virtual void OnCollisionEntity(Entity* target) = 0;
+protected:
 	virtual void Update() = 0;
-	virtual void Shoot() = 0;
-	virtual void Kill(Entity*) = 0;
 protected:
 	int x, y;
 	double speed, delay, time;
 	short color;
 	wchar_t symbol;
 	bool isAlive;
+	World* world;
 protected:
 	Direction eDirection;
 	EntityType eEntityType;
@@ -50,15 +60,6 @@ protected:
 #include "Runner.h"
 #include "Randomer.h"
 #include "Chaser.h"
-
-
-class Chaser : public Entity
-{
-public:
-
-private:
-
-};
 
 class MovebleEntity : public Entity
 {

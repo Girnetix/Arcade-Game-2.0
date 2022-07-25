@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "World.h"
 
 Entity::Entity()
 {
@@ -8,6 +9,7 @@ Entity::Entity()
 	speed = delay = time = 0.0;
 	symbol = ' ';
 	isAlive = true;
+	world = nullptr;
 }
 
 Entity::Entity(int x, int y, short color, Direction eDirection, double speed) :Entity()
@@ -23,9 +25,19 @@ Entity::Entity(int x, int y, short color, Direction eDirection, double speed) :E
 		delay = 0.0;
 }
 
-void Entity::DestroyEntity(Entity* entity)
+void Entity::CreateEntity(Entity* entity)
 {
+	world->CreateEntity(entity);
+}
 
+void Entity::SetEntityToBuf(Entity* entity)
+{
+	world->SetEntityToBuf(entity->x, entity->y, entity);
+}
+
+void Entity::DeleteEntityFromBuf(Entity* entity)
+{
+	world->DeleteEntityFromBuf(entity->x, entity->y);
 }
 
 int Entity::GetX()
@@ -36,6 +48,16 @@ int Entity::GetX()
 int Entity::GetY()
 {
 	return y;
+}
+
+short Entity::GetEntityColor()
+{
+	return color;
+}
+
+wchar_t Entity::GetEntitySymbol()
+{
+	return symbol;
 }
 
 void Entity::Alive(bool isAlive)
@@ -54,17 +76,13 @@ void Entity::UpdateEntity(double deltaTime)
 	if (time >= delay)
 	{
 		time -= delay;
-		pWindow->ClearSymbol(x, y, symbol);
 		Update();
-		if (IsAlive())
-			pWindow->PrintSymbol(x, y, symbol, color);
 	}
 }
 
 Entity* Entity::GetEntity(int x, int y)
 {
-	//поиск сущности по полученным координатам
-	return nullptr;
+	return world->GetEntity(x, y);
 }
 
 Entity::EntityType Entity::GetEntityType()
@@ -75,5 +93,15 @@ Entity::EntityType Entity::GetEntityType()
 Entity::Direction Entity::GetDiretion()
 {
 	return eDirection;
+}
+
+void Entity::SetWorld(World* world)
+{
+	this->world = world;
+}
+
+World* Entity::GetWorld()
+{
+	return world;
 }
 

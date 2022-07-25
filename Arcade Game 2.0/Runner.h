@@ -8,11 +8,9 @@ class Runner : public Entity
 {
 public:
 	Runner(int x, int y, short color, Direction eDirection, double speed);
-	void Update() override;
-	void Shoot() override;
-	void Kill(Entity*) override;
+	void OnCollisionEntity(Entity* target) override;
 private:
-
+	void Update() override;
 };
 
 #endif

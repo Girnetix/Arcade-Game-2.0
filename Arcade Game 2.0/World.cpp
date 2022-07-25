@@ -1,4 +1,5 @@
 #include "World.h"
+#include "Entity.h"
 
 Entity* World::GetEntity(int x, int y)
 {
@@ -19,22 +20,6 @@ void World::DeleteEntityFromBuf(int x, int y)
 	entityBuffer[y * pWindow->GetScrWidth() + x].entity = nullptr;
 }
 
-void World::DestroyEntity(Entity* entity)
-{
-	int x = entity->GetX(), y = entity->GetY();
-	Entity* target = GetEntity(x, y);
-	if (target != nullptr)
-	{
-		DeleteEntityFromBuf(x, y);
-		for (auto iter = entities.begin(); iter != entities.end(); iter++)
-			if (*iter == target)
-			{
-				entities.erase(iter);
-				break;
-			}
-	}
-}
-
 World::World()
 {
 	int size = pWindow->GetScrWidth() * pWindow->GetScrHeight();
@@ -48,6 +33,7 @@ World::~World()
 
 void World::CreateEntity(Entity* entity)
 {
+	entity->SetWorld(this);
 	entities.push_back(entity);
 	SetEntityToBuf(entity->GetX(), entity->GetY(), entity);
 }
@@ -57,15 +43,15 @@ void World::UpdateWorld(double deltaTime)
 	for (auto iter = entities.begin(); iter != entities.end();)
 	{
 		Entity* currentEntity = *iter;
-		DeleteEntityFromBuf(currentEntity->GetX(), currentEntity->GetY());
-		currentEntity->UpdateEntity(deltaTime);
 		if (currentEntity->IsAlive())
 		{
-			SetEntityToBuf(currentEntity->GetX(), currentEntity->GetY(), currentEntity);
+			currentEntity->UpdateEntity(deltaTime);
 			iter++;
 		}
 		else
 			if (currentEntity->GetEntityType() != Entity::EntityType::Player)
 				iter = entities.erase(iter);
+			else
+				currentEntity->UpdateEntity(deltaTime);
 	}
 }

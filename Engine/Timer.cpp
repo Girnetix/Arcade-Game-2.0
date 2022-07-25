@@ -1,4 +1,4 @@
-#include"Timer.h"
+#include "Timer.h"
 
 Timer* pTimer = nullptr;
 
@@ -137,4 +137,3 @@ Timer::TimerHandle::TimerHandle(double time, std::function<void()> lambda, int c
 	id = counter;
 	counter++;
 }
-

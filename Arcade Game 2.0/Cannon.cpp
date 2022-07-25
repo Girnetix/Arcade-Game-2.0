@@ -10,8 +10,11 @@ Cannon::Cannon(int x, int y, short color, Direction eDirection, double speed) :E
 		case Direction::Left:	symbol = '-'; break;
 		case Direction::Right:	symbol = '-'; break;
 	}
-	//entitiesBuffer->SetEntity(x, y, this);
-	pWindow->PrintSymbol(x, y, symbol, color);
+	CreateEntity(this);
+}
+
+void Cannon::OnCollisionEntity(Entity* target)
+{
 }
 
 void Cannon::Update()
@@ -21,10 +24,5 @@ void Cannon::Update()
 
 void Cannon::Shoot()
 {
-	//entities.push_back(new Bullet(x, y, FG_RED | BG_BLACK, eDirection, this, 50.0));
-}
-
-void Cannon::Kill(Entity* killer)
-{
-
+	CreateEntity(new Bullet(x, y, FG_RED | BG_BLACK, eDirection, this, 50.0));
 }

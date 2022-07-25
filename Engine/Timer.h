@@ -2,9 +2,9 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include<list>
-#include<Windows.h>
-#include<functional>
+#include <list>
+#include <Windows.h>
+#include <functional>
 
 class Timer
 {
