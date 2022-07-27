@@ -2,6 +2,7 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include "Network.h"
 #include "Rendering.h"
 #include "Timer.h"
 #include "FileSystem.h"

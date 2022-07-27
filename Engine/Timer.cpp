@@ -9,7 +9,6 @@ Timer::Timer()
 	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
 	uint64_t CPUBefore = 0, CPUAfter = 0;
 	uint64_t timeAfter = 0;
-	double CPUSpeed = 0;
 	QueryPerformanceCounter((LARGE_INTEGER*)&timeNow);
 	timeBefore = timeNow;
 	timeAfter = timeNow + frequency / 4;
@@ -19,7 +18,8 @@ Timer::Timer()
 		QueryPerformanceCounter((LARGE_INTEGER*)&timeNow);
 	} while (timeNow < timeAfter);
 	CPUAfter = __rdtsc();
-	CPUSpeed = floor((double)((CPUAfter - CPUBefore) * frequency / (timeNow - timeBefore)) / 1000000.0) / 1000.0;
+	CPUSpeed = floor((double)((CPUAfter - CPUBefore) * frequency / (timeNow - timeBefore)) / 1000000);
+	CPUSpeed *= 1000000;
 	timeBefore = timeNow;
 }
 
@@ -118,6 +118,17 @@ uint32_t Timer::SetTimerMSec(double milliseconds, std::function<void()> lamdaFun
 	return TimerHandle::counter;
 }
 
+CTimerValue Timer::GetHighPrecisionTime()
+{
+	int64_t ticks = __rdtsc();
+	return ticks;
+}
+
+uint64_t Timer::GetFreqency()
+{
+	return CPUSpeed;
+}
+
 Timer::TimerHandle* Timer::GetTimerHandle(unsigned int id)
 {
 	for (auto iterator = timerList.begin(); iterator != timerList.end(); iterator++)
@@ -136,4 +147,82 @@ Timer::TimerHandle::TimerHandle(double time, std::function<void()> lambda, int c
 	this->countOfRepeat = countOfRepeat;
 	id = counter;
 	counter++;
+}
+
+CTimerValue::CTimerValue()
+{
+	value = 0;
+}
+
+CTimerValue::CTimerValue(double seconds)
+{
+	value = (int64_t)(seconds*pTimer->GetFreqency());
+}
+
+CTimerValue::CTimerValue(int64_t value)
+{
+	this->value = value;
+}
+
+void CTimerValue::Clear()
+{
+	value = 0;
+}
+
+CTimerValue& CTimerValue::operator=(const CTimerValue& other)
+{
+	value = other.value;
+	return *this;
+}
+
+CTimerValue& CTimerValue::operator+=(const CTimerValue& other)
+{
+	value += other.value;
+	return *this;
+}
+
+CTimerValue& CTimerValue::operator+(const CTimerValue& other)
+{
+	return CTimerValue(*this)+=other;
+}
+
+CTimerValue& CTimerValue::operator-=(const CTimerValue& other)
+{
+	value -= other.value;
+	return *this;
+}
+
+CTimerValue& CTimerValue::operator-(const CTimerValue& other)
+{
+	return CTimerValue(*this) -= other;
+}
+
+bool CTimerValue::operator>(const CTimerValue& other)
+{
+	return value > other.value;
+}
+
+bool CTimerValue::operator<(const CTimerValue& other)
+{
+	return value < other.value;
+}
+
+bool CTimerValue::operator>=(const CTimerValue& other)
+{
+	return value >= other.value;;
+}
+
+bool CTimerValue::operator<=(const CTimerValue& other)
+{
+	return value <= other.value;
+}
+
+double CTimerValue::GetSeconds()
+{
+	return value / pTimer->GetFreqency();
+}
+
+int64_t CTimerValue::GetMilliseconds()
+{
+	return GetSeconds() * 1000;
 }

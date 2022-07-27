@@ -6,6 +6,34 @@
 #include <Windows.h>
 #include <functional>
 
+class CTimerValue
+{
+	int64_t value = 0;
+public:
+	CTimerValue();
+	CTimerValue(double seconds);
+	CTimerValue(int64_t value);
+	void Clear();
+
+	CTimerValue& operator=(const CTimerValue& other);
+
+	CTimerValue& operator+=(const CTimerValue& other);
+	CTimerValue& operator+(const CTimerValue& other);
+
+	CTimerValue& operator-=(const CTimerValue& other);
+	CTimerValue& operator-(const CTimerValue& other);
+
+	bool operator >(const CTimerValue& other);
+	bool operator <(const CTimerValue& other);
+
+	bool operator >=(const CTimerValue& other);
+	bool operator <=(const CTimerValue& other);
+
+	//получить время в секундах или в миллисекундах (использовать только для временных промежутков)
+	double GetSeconds();
+	int64_t GetMilliseconds();
+};
+
 class Timer
 {
 public:
@@ -24,6 +52,8 @@ public:
 	uint32_t SetTimer(double seconds, double minutes, double hours, std::function<void()> lamdaFunction, int countOfRepeat = -1);
 	uint32_t SetTimer(double seconds, std::function<void()> lamdaFunction, int countOfRepeat = -1);
 	uint32_t SetTimerMSec(double milliseconds, std::function<void()> lamdaFunction, int countOfRepeat = -1);
+	CTimerValue GetHighPrecisionTime();											//возвращает кол-во тактов процессора
+	uint64_t GetFreqency();
 private:
 	class TimerHandle
 	{
@@ -40,6 +70,7 @@ private:
 private:
 	uint64_t timeBefore = 0, timeNow = 0, frequency = 0;						//временные точки и частота (число операций в секунду)
 	double deltaTime = 0.0;														//время между двумя временными точками (в секундах)
+	double CPUSpeed = 0.0;														//скорость процессора (в Гц)
 	std::list<TimerHandle*> timerList;											//список указателей на все дескрипторы таймеров
 private:
 	TimerHandle* GetTimerHandle(unsigned int id);								//получить дескриптор таймера по ид

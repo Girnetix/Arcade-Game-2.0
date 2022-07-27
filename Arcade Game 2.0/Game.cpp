@@ -3,7 +3,12 @@
 bool CGame::OnUserCreate()
 {
 	gameState = GameState::Running;
-	world = new World();
+	pWorld = new World();
+
+	Player player(0, 0, FG_BLUE | BG_BLACK, Entity::Direction::Up, 5.0, L"test");
+
+	pWorld->UpdateWorld(5.0);
+
 	return true;
 }
 
@@ -23,7 +28,7 @@ bool CGame::OnUserUpdate(float fElapsedTime)
 
 void CGame::OnUserDestroy()
 {
-	delete world;
+	delete pWorld;
 }
 
 void CGame::DoGameLoop(double deltaTime)
@@ -43,7 +48,7 @@ void CGame::DoGameLoop(double deltaTime)
 	wchar_t msg[20];
 	swprintf_s(msg, 20, L"%02d:%02d:%02d", hour, min % 60, sec % 60);
 	pWindow->PrintMsg(0, 49, msg, FG_GREEN);*/
-	world->UpdateWorld(deltaTime);
+	pWorld->UpdateWorld(deltaTime);
 	//int count = entities.size();							//текущее кол-во объектов
 	//for (int i = 0; i < count; i++)
 	//{

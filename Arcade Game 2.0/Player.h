@@ -8,6 +8,7 @@ class Player : public Entity
 {
 public:
 	Player(int x, int y, short color, Direction eDirection, double speed, const std::wstring& name);
+	Player& operator=(Player& other);
 	void Update() override;
 	void OnCollisionEntity(Entity* target) override;
 	void Kill(Entity* killer);

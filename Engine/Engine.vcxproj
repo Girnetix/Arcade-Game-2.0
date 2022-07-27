@@ -145,23 +145,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Client.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MenuCreater.h" />
+    <ClInclude Include="Network.h" />
+    <ClInclude Include="NetworkMessage.h" />
+    <ClInclude Include="Packet.h" />
     <ClInclude Include="PRNG.h" />
     <ClInclude Include="Rendering.h" />
+    <ClInclude Include="Server.h" />
+    <ClInclude Include="Socket.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="MenuCreater.cpp" />
+    <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="PRNG.cpp" />
     <ClCompile Include="Rendering.cpp" />
+    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Socket.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

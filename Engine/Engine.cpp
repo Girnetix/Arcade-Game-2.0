@@ -9,7 +9,8 @@ void CEngine::Start(int ScreenWidth, int ScreenHeight, std::wstring NameApp)
 	pMenu = new Menu();
 	pFile = new FileSystem();
 	pNumGenerator = new NumberGenerator();
-	if (pWindow && pTimer && pMenu && pFile && pNumGenerator)		//если всё запущено, то устанавливаем флаг о том, что движок запущен
+	pNetwork = new Network();
+	if (pWindow && pTimer && pMenu && pFile && pNumGenerator && pNetwork)		//если всё запущено, то устанавливаем флаг о том, что движок запущен
 	{
 		bIsRunning = true;
 		GameThread();
@@ -23,6 +24,7 @@ void CEngine::Stop()
 	delete pMenu;
 	delete pFile;
 	delete pNumGenerator;
+	delete pNetwork;
 }
 
 void CEngine::GameThread()			//основное игровое ядро

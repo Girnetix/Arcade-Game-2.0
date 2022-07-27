@@ -7,12 +7,11 @@
 
 class CGame: public CEngine
 {
-private:
-	void DoGameLoop(double deltaTime);
-private:
+public:
 	bool OnUserCreate() override;
 	bool OnUserUpdate(float fElapsedTime) override;
 	void OnUserDestroy() override;
+	void DoGameLoop(double deltaTime);
 private:
 	enum class GameState
 	{
@@ -24,7 +23,6 @@ private:
 	};
 private:
 	GameState gameState = GameState::Menu;			//состояние игры
-	World* world = nullptr;
 	bool gameIsRunning = true;		//переменная, которая показывает запущена игра или нет
 	double gameTime = 0.0, fpsTime = 1.0, minFPS = 0.0, maxFPS = 0.0;
 	int fpscount = 0;

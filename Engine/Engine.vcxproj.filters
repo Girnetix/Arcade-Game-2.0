@@ -13,57 +13,102 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Исходные файлы\Network">
+      <UniqueIdentifier>{1526547f-0878-412f-a392-3ca80e6bd684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Network">
+      <UniqueIdentifier>{76d50883-d7ea-4f6a-8a65-fcd591115dec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Base">
+      <UniqueIdentifier>{e9fd18b0-1058-4b23-84e5-b63eae822edc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Base">
+      <UniqueIdentifier>{f0b9b10c-5749-457b-8ff2-4542dd3a28df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Timer.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Rendering.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Engine.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="PRNG.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuCreater.h">
-      <Filter>Файлы заголовков</Filter>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Файлы заголовков\Base</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\Base</Filter>
     </ClInclude>
     <ClInclude Include="Log.h">
-      <Filter>Файлы заголовков</Filter>
+      <Filter>Файлы заголовков\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuCreater.h">
+      <Filter>Файлы заголовков\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="PRNG.h">
+      <Filter>Файлы заголовков\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendering.h">
+      <Filter>Файлы заголовков\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Файлы заголовков\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h">
+      <Filter>Файлы заголовков\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Файлы заголовков\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Файлы заголовков\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Socket.h">
+      <Filter>Файлы заголовков\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>Файлы заголовков\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkMessage.h">
+      <Filter>Файлы заголовков\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Rendering.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSystem.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="PRNG.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuCreater.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="FileSystem.cpp">
+      <Filter>Исходные файлы\Base</Filter>
+    </ClCompile>
     <ClCompile Include="Input.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Исходные файлы\Base</Filter>
     </ClCompile>
     <ClCompile Include="Log.cpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Исходные файлы\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuCreater.cpp">
+      <Filter>Исходные файлы\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="PRNG.cpp">
+      <Filter>Исходные файлы\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendering.cpp">
+      <Filter>Исходные файлы\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Исходные файлы\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Network.cpp">
+      <Filter>Исходные файлы\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Исходные файлы\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Исходные файлы\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Socket.cpp">
+      <Filter>Исходные файлы\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet.cpp">
+      <Filter>Исходные файлы\Network</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

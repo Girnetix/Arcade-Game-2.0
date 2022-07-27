@@ -32,4 +32,6 @@ private:
 	EntityBuffer* entityBuffer = nullptr;
 };
 
+extern World* pWorld;
+
 #endif

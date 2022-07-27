@@ -1,6 +1,8 @@
 #include "World.h"
 #include "Entity.h"
 
+World* pWorld = nullptr;
+
 Entity* World::GetEntity(int x, int y)
 {
 	return entityBuffer[y * pWindow->GetScrWidth() + x].entity;

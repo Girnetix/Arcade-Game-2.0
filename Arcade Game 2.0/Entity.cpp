@@ -27,17 +27,17 @@ Entity::Entity(int x, int y, short color, Direction eDirection, double speed) :E
 
 void Entity::CreateEntity(Entity* entity)
 {
-	world->CreateEntity(entity);
+	pWorld->CreateEntity(entity);
 }
 
 void Entity::SetEntityToBuf(Entity* entity)
 {
-	world->SetEntityToBuf(entity->x, entity->y, entity);
+	pWorld->SetEntityToBuf(entity->x, entity->y, entity);
 }
 
 void Entity::DeleteEntityFromBuf(Entity* entity)
 {
-	world->DeleteEntityFromBuf(entity->x, entity->y);
+	pWorld->DeleteEntityFromBuf(entity->x, entity->y);
 }
 
 int Entity::GetX()
@@ -82,7 +82,7 @@ void Entity::UpdateEntity(double deltaTime)
 
 Entity* Entity::GetEntity(int x, int y)
 {
-	return world->GetEntity(x, y);
+	return pWorld->GetEntity(x, y);
 }
 
 Entity::EntityType Entity::GetEntityType()
@@ -102,6 +102,6 @@ void Entity::SetWorld(World* world)
 
 World* Entity::GetWorld()
 {
-	return world;
+	return pWorld;
 }
 

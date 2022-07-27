@@ -13,6 +13,21 @@ Player::Player(int x, int y, short color, Direction eDirection, double speed, co
 	playerList.push_back(this);
 }
 
+Player& Player::operator=(Player& other)
+{
+	x = other.x;
+	y = other.y;
+	symbol = other.symbol;
+	eEntityType = other.eEntityType;
+	color = other.color;
+	eDirection = other.eDirection;
+	speed = other.speed;
+	id = other.id;
+	name = other.name;
+
+	return *this;
+}
+
 void Player::Update()
 {
 	if (IsAlive())

@@ -40,7 +40,6 @@ public:
 	World* GetWorld();
 public:
 	virtual void OnCollisionEntity(Entity* target) = 0;
-protected:
 	virtual void Update() = 0;
 protected:
 	int x, y;
