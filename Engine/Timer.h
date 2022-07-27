@@ -53,7 +53,7 @@ public:
 	uint32_t SetTimer(double seconds, std::function<void()> lamdaFunction, int countOfRepeat = -1);
 	uint32_t SetTimerMSec(double milliseconds, std::function<void()> lamdaFunction, int countOfRepeat = -1);
 	CTimerValue GetHighPrecisionTime();											//возвращает кол-во тактов процессора
-	uint64_t GetFreqency();
+	uint64_t GetFrequency();
 private:
 	class TimerHandle
 	{

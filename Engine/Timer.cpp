@@ -124,7 +124,7 @@ CTimerValue Timer::GetHighPrecisionTime()
 	return ticks;
 }
 
-uint64_t Timer::GetFreqency()
+uint64_t Timer::GetFrequency()
 {
 	return CPUSpeed;
 }
@@ -156,7 +156,7 @@ CTimerValue::CTimerValue()
 
 CTimerValue::CTimerValue(double seconds)
 {
-	value = (int64_t)(seconds*pTimer->GetFreqency());
+	value = (int64_t)(seconds*pTimer->GetFrequency());
 }
 
 CTimerValue::CTimerValue(int64_t value)
@@ -219,7 +219,7 @@ bool CTimerValue::operator<=(const CTimerValue& other)
 
 double CTimerValue::GetSeconds()
 {
-	return value / pTimer->GetFreqency();
+	return value / pTimer->GetFrequency();
 }
 
 int64_t CTimerValue::GetMilliseconds()
