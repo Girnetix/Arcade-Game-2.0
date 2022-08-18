@@ -39,7 +39,8 @@ void CClient::Connect(std::string ipAdress, int iPort)
 				 >> p;
 
 	int systemPing = (clientPacket.clientReceivingTime - clientPacket.clientSendingTime).GetMilliseconds();
-	int ping = ((clientPacket.clientReceivingTime - clientPacket.serverSendingTime) + (clientPacket.serverReceivingTime - clientPacket.clientSendingTime)).GetMilliseconds();
+	int ping = ((clientPacket.clientReceivingTime - clientPacket.clientSendingTime) - (clientPacket.serverSendingTime - clientPacket.serverReceivingTime)).GetMilliseconds();
+
 }
 
 void CClient::Stop()
