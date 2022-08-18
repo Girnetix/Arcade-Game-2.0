@@ -29,6 +29,8 @@ public:
 	bool operator >=(const CTimerValue& other);
 	bool operator <=(const CTimerValue& other);
 
+	bool operator ==(const CTimerValue& other);
+
 	//получить время в секундах или в миллисекундах (использовать только для временных промежутков)
 	double GetSeconds();
 	int64_t GetMilliseconds();

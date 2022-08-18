@@ -9,7 +9,7 @@ class CClient
 public:
 	void Init();
 	void Start();
-	void Connect();
+	void Connect(std::string ipAdress, int iPort);
 	void Stop();
 	void Send();
 	void Receive();
@@ -17,7 +17,9 @@ public:
 	int GetPing();
 private:
 	Socket sock;
-	CPacket packet;
+	CPacket clientPacket;
+	sockaddr_in serverInfo;
+	NetworkMessageType nmType;
 };
 
 #endif

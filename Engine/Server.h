@@ -6,6 +6,8 @@
 
 #define MAX_CLIENTS 16
 
+extern const double TimeoutConnection;
+
 class CServer
 {
 private:
@@ -15,26 +17,29 @@ private:
 		int iPort;
 		int id;
 		sockaddr_in info;
+		CTimerValue lastReceivedMessage;
 	};
 public:
-	void Init(std::wstring ipAdress, uint32_t iPort, int maxClients = 8);
+	void Init(std::string ipAdress, uint32_t iPort, int maxClients = 8);
 	void Start();
 	void Stop();
-	void Send(CPacket &packet, int iClient);
-	void Receive(CPacket& packet, int iClient);
+	void Send(CPacket &packet);
+	void Receive(CPacket& packet);
 	void Update();
 	int GetPing();
 private:
 	Socket sock;
-	bool serverIsActive;
-	std::wstring ipAdress;
+	bool serverIsActive, serverInitialized;
+	std::string ipAdress;
 	int iPort;
 	int maxClients;
 	static int idCounter;
 private:
 	std::vector<ConnectedClient*> connectedClients;
 	std::vector<CPacket*> clientPackets;
+	CPacket clientPacket;
 	CPacket serverPacket;
+	NetworkMessageType nmType;
 };
 
 #endif

@@ -6,7 +6,8 @@ enum NetworkMessageType
 {
 	Connecting,
 	Connected,
-	Disconnecting
+	Disconnecting,
+	Broadcast
 };
 
 #endif

@@ -217,6 +217,11 @@ bool CTimerValue::operator<=(const CTimerValue& other)
 	return value <= other.value;
 }
 
+bool CTimerValue::operator==(const CTimerValue& other)
+{
+	return value == other.value;
+}
+
 double CTimerValue::GetSeconds()
 {
 	return value / pTimer->GetFrequency();

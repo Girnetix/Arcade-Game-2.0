@@ -12,8 +12,8 @@ public:
 	bool Bind(sockaddr_in &info);
 	bool SetNonBlock();
 	bool CloseSocket();
-	void Send(CPacket &packet, sockaddr_in &to);
-	void Receive(CPacket& packet, sockaddr_in& from);
+	int Send(CPacket &packet, sockaddr_in &to);
+	int Receive(CPacket& packet, sockaddr_in& from);
 	~Socket();
 private:
 	SOCKET sock;

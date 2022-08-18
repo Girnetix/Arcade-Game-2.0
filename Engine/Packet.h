@@ -4,8 +4,11 @@
 
 #include "Rendering.h"
 #include "Timer.h"
+#include "NetworkMessage.h"
 
 #define MAX_PACKET_SIZE 2048
+
+extern uint32_t idMessage;
 
 class CPacket
 {
@@ -32,7 +35,6 @@ public:
 	bool operator==(CPacket& other);
 private:
 	int extarctionOffset;
-	std::vector<char> buffer;
 public:
 	//данные для подсчёта задержки(пинг)
 	CTimerValue clientSendingTime;
@@ -40,6 +42,7 @@ public:
 	CTimerValue serverSendingTime;
 	CTimerValue clientReceivingTime;
 	
+	std::vector<char> buffer;
 };
 
 template<typename Type>
