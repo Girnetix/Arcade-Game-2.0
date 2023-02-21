@@ -31,7 +31,10 @@ Timer::~Timer()
 void Timer::UpdateTimer()
 {
 	QueryPerformanceCounter((LARGE_INTEGER*)&timeNow);
-	deltaTime = (timeNow / 4.0 - timeBefore / 4.0) / (frequency / 4.0);			//получаем время между вызовами этого метода (в секундах)
+	deltaTime = (double)(timeNow - timeBefore) / frequency;								//получаем время между вызовами этого метода (в секундах)
+	workingTime += deltaTime;
+	if (deltaTime > 1)
+		deltaTime = 1;
 	timeBefore = timeNow;
 	for (auto iterator = timerList.begin(); iterator != timerList.end();)
 	{
@@ -49,15 +52,51 @@ void Timer::UpdateTimer()
 					if (currentTimer->countOfRepeat == 0)
 						currentTimer->TimerState = TimerHandleState::Finished;	//устанавливаем флаг, что таймер завершил свою работу
 				}
-				iterator++; 
+				++iterator; 
 				break;
-			case TimerHandleState::Paused:	 iterator++; break;					//если таймер приостановлен, то переходим к следующему таймеру
+			case TimerHandleState::Sleeping:									//если таймер в режиме сна
+				currentTimer->sleepingTime -= deltaTime;						//уменьшаем время сна
+				if (currentTimer->sleepingTime <= 0.0)							//если время сна закончилось, то переводим таймер в режим работы
+					currentTimer->TimerState = TimerHandleState::Running;
+				++iterator;
+				break;
+			case TimerHandleState::Paused:	 ++iterator; break;					//если таймер приостановлен, то переходим к следующему таймеру
 			case TimerHandleState::Finished: iterator = timerList.erase(iterator); break;	//если таймер завершил свою работу, то удаляем его
 		}
 	}
 }
 
-bool Timer::PauseTimer(unsigned int id)
+void Timer::PrintInfo()
+{
+	wchar_t msg[20];
+	int sec = workingTime;
+	int min = sec / 60;
+	int hour = min / 60;
+	swprintf_s(msg, 20, L"%02d:%02d:%02d", hour, min % 60, sec % 60);
+	pWindow->PrintMsg(50, 0, L"Total work time: ");
+	pWindow->PrintMsg(69, 0, msg);
+	pWindow->PrintMsg(50, 1, L"Total timers: " + std::to_wstring(timerList.size()));
+	pWindow->PrintMsg(50, 3, L"Timer id      Delay      Current Time      Repeats left      State");
+	int i = 4;
+	for (auto& currentTimer : timerList)
+	{
+		switch (currentTimer->TimerState)
+		{
+		case TimerHandleState::Running:										
+			pWindow->PrintMsg(50, i, std::to_wstring(currentTimer->id) + L"      " + std::to_wstring(currentTimer->delay) + L"      " + std::to_wstring(currentTimer->currentTime) + L"      " + std::to_wstring(currentTimer->countOfRepeat) + L"      " + L"Running", FG_GREEN);
+			break;
+		case TimerHandleState::Paused:
+			pWindow->PrintMsg(50, i, std::to_wstring(currentTimer->id) + L"      " + std::to_wstring(currentTimer->delay) + L"      " + std::to_wstring(currentTimer->currentTime) + L"      " + std::to_wstring(currentTimer->countOfRepeat) + L"      " + L"Paused", FG_RED);
+			break;;
+		case TimerHandleState::Finished:
+			pWindow->PrintMsg(50, i, std::to_wstring(currentTimer->id) + L"      " + std::to_wstring(currentTimer->delay) + L"      " + std::to_wstring(currentTimer->currentTime) + L"      " + std::to_wstring(currentTimer->countOfRepeat) + L"      " + L"Finished");
+			break;
+		}
+		i++;
+	}
+}
+
+bool Timer::PauseTimerHandle(unsigned int id)
 {
 	TimerHandle* currentTimer = GetTimerHandle(id);
 	if (currentTimer != nullptr)
@@ -69,12 +108,37 @@ bool Timer::PauseTimer(unsigned int id)
 		return false;
 }
 
-bool Timer::UnpauseTimer(unsigned int id)
+bool Timer::UnpauseTimerHandle(unsigned int id)
 {
 	TimerHandle* currentTimer = GetTimerHandle(id);
 	if (currentTimer != nullptr)
 	{
 		currentTimer->TimerState = TimerHandleState::Running;
+		return true;
+	}
+	else
+		return false;
+}
+
+bool Timer::SleepTimerHandle(unsigned int id, double seconds)
+{
+	TimerHandle* currentTimer = GetTimerHandle(id);
+	if (currentTimer != nullptr)
+	{
+		currentTimer->TimerState = TimerHandleState::Sleeping;
+		currentTimer->sleepingTime = seconds;
+		return true;
+	}
+	else
+		return false;
+}
+
+bool Timer::StopTimerHandle(unsigned int id)
+{
+	TimerHandle* currentTimer = GetTimerHandle(id);
+	if (currentTimer != nullptr)
+	{
+		currentTimer->TimerState = TimerHandleState::Finished;
 		return true;
 	}
 	else
@@ -100,53 +164,59 @@ double Timer::GetDeltaTimeMSec()
 	return deltaTime * 1000.0;
 }
 
-uint32_t Timer::SetTimer(double seconds, double minutes, double hours, std::function<void()> lamdaFunction, int countOfRepeat)
+double Timer::GetWorkingTime()
 {
-	timerList.push_back(new TimerHandle(seconds + minutes * 60.0 + hours * 3600.0, lamdaFunction, countOfRepeat));
-	return TimerHandle::counter;
+	return workingTime;
 }
 
-uint32_t Timer::SetTimer(double seconds, std::function<void()> lamdaFunction, int countOfRepeat)
+uint32_t Timer::SetTimer(double seconds, double minutes, double hours, std::function<void()> lamdaFunction, bool firstDelay, int countOfRepeat)
 {
-	timerList.push_back(new TimerHandle(seconds, lamdaFunction, countOfRepeat));
-	return TimerHandle::counter;
+	timerList.push_back(new TimerHandle(seconds + minutes * 60.0 + hours * 3600.0, lamdaFunction, firstDelay, countOfRepeat));
+	return TimerHandle::counter++;
 }
 
-uint32_t Timer::SetTimerMSec(double milliseconds, std::function<void()> lamdaFunction, int countOfRepeat)
+uint32_t Timer::SetTimer(double seconds, std::function<void()> lamdaFunction, bool firstDelay, int countOfRepeat)
 {
-	timerList.push_back(new TimerHandle(milliseconds / 1000.0, lamdaFunction, countOfRepeat));
-	return TimerHandle::counter;
+	timerList.push_back(new TimerHandle(seconds, lamdaFunction, firstDelay, countOfRepeat));
+	return TimerHandle::counter++;
+}
+
+uint32_t Timer::SetTimer(int milliseconds, std::function<void()> lamdaFunction, bool firstDelay, int countOfRepeat)
+{
+	timerList.push_back(new TimerHandle(milliseconds / 1000.0, lamdaFunction, firstDelay, countOfRepeat));
+	return TimerHandle::counter++;
 }
 
 CTimerValue Timer::GetHighPrecisionTime()
 {
-	int64_t ticks = __rdtsc();
-	return ticks;
+	int64_t value;
+	QueryPerformanceCounter((LARGE_INTEGER*)&value);
+	return value;
 }
 
 uint64_t Timer::GetFrequency()
 {
-	return CPUSpeed;
+	return frequency;
 }
 
 Timer::TimerHandle* Timer::GetTimerHandle(unsigned int id)
 {
-	for (auto iterator = timerList.begin(); iterator != timerList.end(); iterator++)
+	for (auto& currentTimer : timerList)
 	{
-		TimerHandle* currentTimer = *iterator;
 		if (currentTimer->id == id)
 			return currentTimer;
 	}
 	return nullptr;
 }
 
-Timer::TimerHandle::TimerHandle(double time, std::function<void()> lambda, int countOfRepeat)
+Timer::TimerHandle::TimerHandle(double time, std::function<void()> lambda, bool firstDelay, int countOfRepeat)
 {
 	delay = time;
+	if (!firstDelay)
+		currentTime = delay;
 	function = lambda;
 	this->countOfRepeat = countOfRepeat;
 	id = counter;
-	counter++;
 }
 
 CTimerValue::CTimerValue()
@@ -156,7 +226,7 @@ CTimerValue::CTimerValue()
 
 CTimerValue::CTimerValue(double seconds)
 {
-	value = (int64_t)(seconds*pTimer->GetFrequency());
+	value = (int64_t)(seconds * pTimer->GetFrequency());
 }
 
 CTimerValue::CTimerValue(int64_t value)
@@ -224,10 +294,15 @@ bool CTimerValue::operator==(const CTimerValue& other)
 
 double CTimerValue::GetSeconds()
 {
-	return value / pTimer->GetFrequency();
+	return (double)value / pTimer->GetFrequency();
 }
 
-int64_t CTimerValue::GetMilliseconds()
+double CTimerValue::GetMilliseconds()
 {
-	return GetSeconds() * 1000;
+	return GetSeconds() * 1000.0;
+}
+
+int64_t CTimerValue::Count()
+{
+	return value;
 }

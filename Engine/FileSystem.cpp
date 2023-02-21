@@ -1,109 +1,78 @@
 #include "FileSystem.h"
 
-FileSystem* pFile = nullptr;
-
-FileSystem::FileSystem()
+File::File()
 {
-	path = "";
-	lastErr = L"";
+	file.exceptions(std::fstream::failbit | std::fstream::badbit);
+	lastErr = path = "";
 }
 
-FileSystem::~FileSystem()
+File::~File()
 {
 	file.close();
+	lastErr = path = "";
 }
 
-void FileSystem::Create(const std::string& filename)
+void File::Create(const std::string& filename)
 {
-	if (file.is_open())							//если у текущего объекта есть открытый файл, то сохраняем его
+	if (!IsOpen())
 	{
-		Save();
-		file.open(filename, std::fstream::in);
-		if (file.is_open())						//если файл с указанным названием уже существует
+		try
 		{
-			Save();
-			lastErr = L"Файл с таким именем уже существует. Придумайте другое название.";
-			return;
+			file.open(filename, std::fstream::out);
+			file.close();
+			Load(filename);
 		}
-		else
+		catch (const std::exception& ex)
 		{
-			file.open(filename, std::fstream::in | std::fstream::out | std::fstream::app);
-			path = filename;
+			lastErr = ex.what();
 		}
 	}
 	else
-	{
-		file.open(filename, std::fstream::in);
-		if (file.is_open())						//если файл с указанным названием уже существует
-		{
-			Save();
-			lastErr = L"Файл с таким именем уже существует. Придумайте другое название.";
-			return;
-		}
-		else
-		{
-			file.open(filename, std::fstream::in | std::fstream::out | std::fstream::app);
-			path = filename;
-		}
-	}
-	lastErr = L"";
+		throw "Use another file object to open the file!";
 }
 
-void FileSystem::Save()
+void File::Save()
 {
-	file.close();
+	if (file.is_open())
+		file.close();
 	path = "";
 }
 
-void FileSystem::Load(const std::string& filename)
+void File::Load(const std::string& filename)
 {
-	if (file.is_open())							//если у текущего объекта есть открытый файл, то сохраняем его
+	if (!IsOpen())
 	{
-		Save();
-		file.open(filename, std::fstream::in);
-		if (file.is_open())						//если файл с указанным названием найден
+		try
 		{
-			Save();
-			file.open(filename, std::fstream::in | std::fstream::out);
+			file.open(filename, std::fstream::out | std::fstream::in);
 			path = filename;
 		}
-		else
+		catch (const std::exception& ex)
 		{
-			file.close();
-			lastErr = L"Указанный файл не найден!";
-			return;
+			lastErr = ex.what();
+			Create(filename);
 		}
 	}
 	else
-	{
-		file.open(filename, std::fstream::in);
-		if (file.is_open())						//если файл с указанным названием найден
-		{
-			Save();
-			file.open(filename, std::fstream::in | std::fstream::out);
-			path = filename;
-		}
-		else
-		{
-			file.close();
-			lastErr = L"Указанный файл не найден!";
-			return;
-		}
-	}
-	lastErr = L"";
+		throw "Use another file object to open the file!";
 }
 
-void FileSystem::Delete()
+int File::Rename(const std::string& oldName, const std::string newName)
 {
-	file.close();
+	Save();
+	int result = rename(oldName.c_str(), newName.c_str());
+	if (result == 0)
+		path = newName;
+	return result;
+}
+
+void File::Delete()
+{
+	Save();
 	remove(path.c_str());
-	path = "";
 }
 
-std::wstring FileSystem::LastError()
-{
-	return lastErr;
-}
+
 
 
 

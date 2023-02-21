@@ -44,9 +44,9 @@ bool Socket::CloseSocket()
 
 int Socket::Send(CPacket& packet, sockaddr_in& to)
 {
-	int totalBytes = packet.PacketSize();
-	char buf = packet.buffer[0];
-	int bytesSent = sendto(sock, (const char*)&packet.buffer[0], MAX_PACKET_SIZE, 0, (sockaddr*)&to, sizeof(to));
+	int bufferSize = packet.PacketSize();
+	int bytesSent = sendto(sock, (const char*)&bufferSize, sizeof(int), 0, (sockaddr*)&to, sizeof(to));
+	bytesSent = sendto(sock, (const char*)packet.GetData(), packet.PacketSize(), 0, (sockaddr*)&to, sizeof(to));
 	if (bytesSent == INVALID_SOCKET)
 	{
 		//вывести ошибку об отправке данных
@@ -58,11 +58,23 @@ int Socket::Send(CPacket& packet, sockaddr_in& to)
 int Socket::Receive(CPacket& packet, sockaddr_in& from)
 {
 	int fromLen = sizeof(from);
-	ZeroMemory(&from, fromLen);
-	packet.buffer.resize(MAX_PACKET_SIZE);
-	int bytesReceived = recvfrom(sock, (char*)&packet.buffer[0], MAX_PACKET_SIZE, 0, (sockaddr*)&from, &fromLen);
+	int bufferSize;
+	int bytesReceived = recvfrom(sock, (char*)&bufferSize, sizeof(int), 0, (sockaddr*)&from, &fromLen);
 	if (bytesReceived == SOCKET_ERROR)
 	{
+		if (WSAGetLastError() == WSAEWOULDBLOCK)
+			return WSAEWOULDBLOCK;
+
+		//вывести сообщение об ошибке
+		return WSAGetLastError();
+	}
+	packet.Reserve(bufferSize);
+	bytesReceived = recvfrom(sock, packet.GetData(), bufferSize, 0, (sockaddr*)&from, &fromLen);
+	if (bytesReceived == SOCKET_ERROR)
+	{
+		if (WSAGetLastError() == WSAEWOULDBLOCK)
+			return WSAEWOULDBLOCK;
+
 		//вывести сообщение об ошибке
 		return WSAGetLastError();
 	}

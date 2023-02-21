@@ -6,24 +6,24 @@
 #include <fstream>
 #include <cstdio>
 
-class FileSystem
+class File
 {
 public:
-	FileSystem();
-	~FileSystem();
+	File();
+	~File();
 	void Create(const std::string& filename);
 	void Save();
 	void Load(const std::string& filename);
+	int Rename(const std::string& oldName, const std::string newName);
 	void Delete();
-	std::wstring LastError();
 	template<typename Type>
-	FileSystem& operator <<(const Type& data)
+	File& operator <<(const Type& data)
 	{
 		file << data;
 		return *this;
 	}
 	template<typename Type>
-	FileSystem& operator >>(Type& data)
+	File& operator >>(Type& data)
 	{
 		file >> data;
 		return *this;
@@ -42,12 +42,13 @@ public:
 	{
 		return file.eof();
 	}
+	bool IsOpen()
+	{
+		return file.is_open();
+	}
 private:
 	std::fstream file;
-	std::string path;
-	std::wstring lastErr;
+	std::string path, lastErr;
 };
-
-extern FileSystem* pFile;
 
 #endif

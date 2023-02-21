@@ -2,20 +2,6 @@
 
 Network* pNetwork = nullptr;
 
-Point::Point(int x, int y, int z)
-{
-	this->x = x;
-	this->y = y;
-	this->z = z;
-}
-
-Point& Point::operator=(Point& other)
-{
-	x = other.x;
-	y = other.y;
-	z = other.z;
-	return *this;
-}
 
 bool Network::Initialize()
 {

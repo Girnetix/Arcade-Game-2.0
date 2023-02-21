@@ -4,12 +4,8 @@ uint32_t idMessage = 3860254197;
 
 CPacket::CPacket()
 {
-	extarctionOffset = 0;
+	extractionOffset = 0;
 	buffer.reserve(MAX_PACKET_SIZE);
-	clientSendingTime = serverReceivingTime = serverSendingTime = clientReceivingTime = pTimer->GetHighPrecisionTime();
-	/**this << idMessage;*/
-	/**this << nmType;
-	*this << clientSendingTime << serverReceivingTime << serverSendingTime << clientReceivingTime;*/
 }
 
 CPacket::~CPacket()
@@ -17,9 +13,12 @@ CPacket::~CPacket()
 	Clear();
 }
 
-void CPacket::Append(void* data, uint32_t size)
+void CPacket::Append(const void* data, uint32_t size)
 {
-	buffer.insert(buffer.end(), (char*)data, (char*)data + size);
+	if (buffer.size() + size <= MAX_PACKET_SIZE)
+		buffer.insert(buffer.end(), (char*)data, (char*)data + size);
+	else
+		throw Exception("[CPacket::Append(void*, uint32_t)]: maximum size of packet is " + std::to_string(MAX_PACKET_SIZE) + " bytes!(your packet size is " + std::to_string(buffer.size() + size) + " bytes)");
 }
 
 char* CPacket::GetData()
@@ -27,37 +26,52 @@ char* CPacket::GetData()
 	return buffer.data();
 }
 
+void CPacket::Reserve(int newSize)
+{
+	buffer.resize(newSize);
+}
+
 void CPacket::Clear()
 {
-	extarctionOffset = 0;
+	extractionOffset = 0;
 	buffer.clear();
-	buffer.reserve(MAX_PACKET_SIZE);
 }
 
 int CPacket::PacketSize()
 {
-	return buffer.size();
+	return (int)buffer.size();
 }
 
 CPacket& CPacket::operator=(CPacket& other)
 {
-	extarctionOffset = other.extarctionOffset;
+	extractionOffset = other.extractionOffset;
 	buffer = other.buffer;
-	clientSendingTime = other.clientSendingTime;
-	serverReceivingTime = other.serverReceivingTime;
-	serverSendingTime = other.serverSendingTime;
-	clientReceivingTime = other.clientReceivingTime;
 	return *this;
 }
 
 bool CPacket::operator==(CPacket& other)
 {
-	if (extarctionOffset == other.extarctionOffset
-		&& buffer == other.buffer
-		&& clientSendingTime == other.clientSendingTime
-		&& serverReceivingTime == other.serverReceivingTime
-		&& serverSendingTime == other.serverSendingTime
-		&& clientReceivingTime == other.clientReceivingTime)
-		return true;
-	else return false;
+	return extractionOffset == other.extractionOffset && buffer == other.buffer;
 }
+
+bool CPacket::operator!=(CPacket& other)
+{
+	return !((*this)==other);
+}
+
+CPacket& CPacket::operator<<(const std::string& data)
+{
+	*this << (uint32_t)data.size();
+	Append(data.data(), (uint32_t)data.size());
+	return *this;
+}
+
+CPacket& CPacket::operator>>(std::string& data)
+{
+	uint32_t stringSize;
+	*this >> stringSize;
+	data.resize(stringSize);
+	data.assign(&buffer[extractionOffset], stringSize);
+	return *this;
+}
+

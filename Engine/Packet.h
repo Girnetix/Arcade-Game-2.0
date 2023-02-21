@@ -5,6 +5,7 @@
 #include "Rendering.h"
 #include "Timer.h"
 #include "NetworkMessage.h"
+#include "Exception.h"
 
 #define MAX_PACKET_SIZE 2048
 
@@ -16,55 +17,73 @@ public:
 	CPacket();
 	~CPacket();
 private:
-	void Append(void* data, uint32_t size);
+	void Append(const void* data, uint32_t size);
 
 	template<typename Type>
 	void Get(Type& data);
 public:
+	void Reserve(int newSize);
 	void Clear();
 	int PacketSize();
 	char* GetData();
 
 	template<typename Type>
-	CPacket& operator<<(Type& data);
+	CPacket& operator<<(const Type& data);
 
 	template<typename Type>
 	CPacket& operator>>(Type& data);
 
+	CPacket& operator<<(const std::string& data);
+	CPacket& operator>>(std::string& data);
+
 	CPacket& operator=(CPacket& other);
 	bool operator==(CPacket& other);
+	bool operator!=(CPacket& other);
 private:
-	int extarctionOffset;
-public:
-	//данные для подсчёта задержки(пинг)
-	CTimerValue clientSendingTime;
-	CTimerValue serverReceivingTime;
-	CTimerValue serverSendingTime;
-	CTimerValue clientReceivingTime;
-	
+	int extractionOffset;
 	std::vector<char> buffer;
 };
 
 template<typename Type>
 inline void CPacket::Get(Type& data)
 {
-	data = *reinterpret_cast<Type*>(&buffer[extarctionOffset]);
-	extarctionOffset += sizeof(Type);
+	if (extractionOffset + sizeof(Type) <= buffer.size())
+	{
+		data = *reinterpret_cast<Type*>(&buffer[extractionOffset]);
+		extractionOffset += sizeof(Type);
+	}
+	else
+		throw Exception("[CPacket::Get(Type&)]: Extraction offset reached max packet size of " + std::to_string(buffer.size()) + " bytes!");
 }
 
 template<typename Type>
-inline CPacket& CPacket::operator<<(Type& data)
+inline CPacket& CPacket::operator<<(const Type& data)
 {
-	Append(&data, sizeof(data));
+	try
+	{
+		Append(&data, sizeof(data));
+	}
+	catch (Exception& exception)
+	{
+		exception.what();
+	}
+	
 	return *this;
 }
 
 template<typename Type>
 inline CPacket& CPacket::operator>>(Type& data)
 {
-	Get(data);
+	try
+	{
+		Get(data);
+	}
+	catch (Exception& exception)
+	{
+		exception.what();
+	}
+	
 	return *this;
 }
-
 
 #endif

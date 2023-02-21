@@ -25,6 +25,12 @@
     <Filter Include="Исходные файлы\Base">
       <UniqueIdentifier>{f0b9b10c-5749-457b-8ff2-4542dd3a28df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Файлы заголовков\Entities">
+      <UniqueIdentifier>{a980ed3f-29d5-4fe6-b33f-41351c1a1e86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Entities">
+      <UniqueIdentifier>{8cc62433-abbf-4c0c-9a42-35e2c43d153d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -69,6 +75,9 @@
     <ClInclude Include="NetworkMessage.h">
       <Filter>Файлы заголовков\Network</Filter>
     </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Файлы заголовков\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -84,9 +93,6 @@
       <Filter>Исходные файлы\Base</Filter>
     </ClCompile>
     <ClCompile Include="MenuCreater.cpp">
-      <Filter>Исходные файлы\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="PRNG.cpp">
       <Filter>Исходные файлы\Base</Filter>
     </ClCompile>
     <ClCompile Include="Rendering.cpp">
@@ -109,6 +115,12 @@
     </ClCompile>
     <ClCompile Include="Packet.cpp">
       <Filter>Исходные файлы\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Исходные файлы\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Исходные файлы\Entities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

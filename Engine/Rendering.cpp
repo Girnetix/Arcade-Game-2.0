@@ -124,6 +124,7 @@ void Window::ClearMsgInCenter(int y, const std::wstring& msg)
 void Window::ChangeAppNme(const std::wstring& nameApp)
 {
 	AppName = nameApp;
+	SetConsoleTitle(AppName.c_str());
 }
 
 void Window::AddToAppName(const std::wstring& str)
@@ -133,7 +134,6 @@ void Window::AddToAppName(const std::wstring& str)
 
 void Window::UpdateWindow()
 {
-	SetConsoleTitle(AppName.c_str());
 	WriteConsoleOutput(hConsole, screen, { (short)screenWidth, (short)screenHeight }, { 0, 0 }, &rectWindow);
 }
 

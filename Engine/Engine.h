@@ -19,7 +19,7 @@ public:
 	void Stop();
 protected:
 	virtual bool OnUserCreate() = 0;
-	virtual bool OnUserUpdate(float fElapsedTime) = 0;
+	virtual bool OnUserUpdate(double fElapsedTime) = 0;
 	virtual void OnUserDestroy() = 0;
 private:
 	bool bIsRunning = false;

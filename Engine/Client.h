@@ -11,13 +11,14 @@ public:
 	void Start();
 	void Connect(std::string ipAdress, int iPort);
 	void Stop();
-	void Send();
-	void Receive();
+	int Send(CPacket& packet);
+	int Receive(CPacket &packet);
 	void Update();
 	int GetPing();
 private:
 	Socket sock;
 	CPacket clientPacket;
+	CPacket serverPacket;
 	sockaddr_in serverInfo;
 	NetworkMessageType nmType;
 };

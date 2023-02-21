@@ -12,7 +12,7 @@ bool CGame::OnUserCreate()
 	return true;
 }
 
-bool CGame::OnUserUpdate(float fElapsedTime)
+bool CGame::OnUserUpdate(double fElapsedTime)
 {
 	switch (gameState)
 	{

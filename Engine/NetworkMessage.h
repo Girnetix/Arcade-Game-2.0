@@ -2,12 +2,14 @@
 #ifndef NET_MSG_H
 #define NET_MSG_H
 
-enum NetworkMessageType
+enum NetworkMessageType : uint8_t
 {
-	Connecting,
+	BroadcastRequest,
+	BroadcastResponse,
+	ConnectingRequest,
+	ConnectingResponse,
 	Connected,
-	Disconnecting,
-	Broadcast
+	Disconnecting
 };
 
 #endif

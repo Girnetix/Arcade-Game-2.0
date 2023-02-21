@@ -24,10 +24,13 @@ void Chaser::OnCollisionEntity(Entity* target)
 Entity* Chaser::FindPlayer()
 {
 	Player* closerPlayer = nullptr;
+	int dx = 0, dy = 0;
 	double minDistanceToTarget = 0.0, distanceToTarget = 0.0;
 	for (auto& currentPlayer : playerList)
 	{
-		distanceToTarget = sqrt((currentPlayer->GetX() - x) * (currentPlayer->GetX() - x) + (currentPlayer->GetY() - y) * (currentPlayer->GetY() - y));
+		dx = currentPlayer->GetX() - x;
+		dy = currentPlayer->GetY() - y;
+		distanceToTarget = sqrt(dx * dx + dy * dy);
 		if (minDistanceToTarget == 0.0)
 		{
 			minDistanceToTarget = distanceToTarget;

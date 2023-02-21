@@ -17,29 +17,20 @@ void CClient::Connect(std::string ipAdress, int iPort)
 	inet_pton(AF_INET, ipAdress.c_str(), &serverInfo.sin_addr);
 	serverInfo.sin_port = htons(iPort);
 
-	clientPacket << idMessage;
-	nmType = NetworkMessageType::Connecting;
+	nmType = NetworkMessageType::ConnectingRequest;
 	clientPacket << nmType;
-
-	clientPacket.clientSendingTime = pTimer->GetHighPrecisionTime();
-
-	clientPacket << clientPacket.clientSendingTime;
 
 	int bytesSent = sock.Send(clientPacket, serverInfo);
 
-	int bytesReceived = sock.Receive(clientPacket, serverInfo);
+	/*clientPacket.clientReceivingTime = pTimer->GetHighPrecisionTime();
 
-	clientPacket.clientReceivingTime = pTimer->GetHighPrecisionTime();
-
-	Point p(0, 0, 0);
 
 	clientPacket >> clientPacket.serverReceivingTime
 				 >> clientPacket.serverSendingTime
-				 >> clientPacket.clientSendingTime
-				 >> p;
+				 >> clientPacket.clientSendingTime;
 
 	int systemPing = (clientPacket.clientReceivingTime - clientPacket.clientSendingTime).GetMilliseconds();
-	int ping = ((clientPacket.clientReceivingTime - clientPacket.clientSendingTime) - (clientPacket.serverSendingTime - clientPacket.serverReceivingTime)).GetMilliseconds();
+	int ping = ((clientPacket.clientReceivingTime - clientPacket.clientSendingTime) - (clientPacket.serverSendingTime - clientPacket.serverReceivingTime)).GetMilliseconds();*/
 
 }
 
@@ -48,14 +39,14 @@ void CClient::Stop()
 
 }
 
-void CClient::Send()
+int CClient::Send(CPacket& packet)
 {
-
+	return sock.Send(packet, serverInfo);
 }
 
-void CClient::Receive()
+int CClient::Receive(CPacket& packet)
 {
-
+	return sock.Receive(packet, serverInfo);
 }
 
 void CClient::Update()

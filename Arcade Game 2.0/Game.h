@@ -9,7 +9,7 @@ class CGame: public CEngine
 {
 public:
 	bool OnUserCreate() override;
-	bool OnUserUpdate(float fElapsedTime) override;
+	bool OnUserUpdate(double fElapsedTime) override;
 	void OnUserDestroy() override;
 	void DoGameLoop(double deltaTime);
 private:
